@@ -1,135 +1,157 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sergio · Portfolio Tracker</title>
-  <link rel="stylesheet" href="style.css" />
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Timi Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@300;400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<link rel="stylesheet" href="style.css"/>
 </head>
 <body>
 
-<div class="app-wrapper">
+<!-- HEADER -->
+<header class="header">
+  <div class="header-left">
+    <span class="logo">TIMI</span>
+    <span class="live-badge"><span class="live-dot"></span>En vivo</span>
+  </div>
+  <div class="header-right">
+    <span class="updated" id="updated-at"></span>
+    <button class="btn-refresh" onclick="initDashboard()">↻ Actualizar</button>
+  </div>
+</header>
 
-  <!-- ─── HEADER ─────────────────────────────────────────── -->
-  <header class="header">
-    <div class="header-left">
-      <h1 id="portfolio-name">Portfolio</h1>
-      <p id="last-updated"></p>
-    </div>
-    <div class="header-badge">iBroker · Clicktrade</div>
-  </header>
+<!-- TABS -->
+<nav class="tabs">
+  <button class="tab active" onclick="switchTab('rentabilidad', this)">Rentabilidad</button>
+  <button class="tab" onclick="switchTab('cartera', this)">Cartera</button>
+</nav>
 
-  <!-- ─── KPIs ───────────────────────────────────────────── -->
-  <div class="kpi-grid">
-    <div class="kpi-card" id="kpi-value">
-      <div class="kpi-label">Valor Total</div>
-      <div class="kpi-value">—</div>
-      <div class="kpi-sub"></div>
+<!-- ══════════════════════════════════════════
+     TAB: RENTABILIDAD
+══════════════════════════════════════════ -->
+<div id="tab-rentabilidad" class="tab-content active">
+
+  <!-- KPI ROW -->
+  <div class="kpi-row">
+    <div class="kpi-block main-kpi">
+      <div class="kpi-label">TIMI</div>
+      <div class="kpi-val" id="r-twr" style="color:var(--red)">—</div>
     </div>
-    <div class="kpi-card" id="kpi-pnl-abs">
-      <div class="kpi-label">G/P Totales (4 años)</div>
-      <div class="kpi-value">—</div>
-      <div class="kpi-sub"></div>
+    <div class="kpi-block">
+      <div class="kpi-label">S&amp;P 500</div>
+      <div class="kpi-val neutral">—4.9%</div>
+      <div class="kpi-sub">EUR: −3.6%</div>
     </div>
-    <div class="kpi-card" id="kpi-pnl-pct">
-      <div class="kpi-label">Rendimiento TWR</div>
-      <div class="kpi-value">—</div>
-      <div class="kpi-sub"></div>
-    </div>
-    <div class="kpi-card" id="kpi-alpha">
-      <div class="kpi-label">Alpha vs Nasdaq</div>
-      <div class="kpi-value">—</div>
-      <div class="kpi-sub"></div>
-    </div>
-    <div class="kpi-card" id="kpi-cash">
-      <div class="kpi-label">Liquidez</div>
-      <div class="kpi-value">—</div>
-      <div class="kpi-sub"></div>
-    </div>
-    <div class="kpi-card" id="kpi-positions">
-      <div class="kpi-label">Posiciones</div>
-      <div class="kpi-value">—</div>
-      <div class="kpi-sub"></div>
+    <div class="kpi-block">
+      <div class="kpi-label">NASDAQ-100</div>
+      <div class="kpi-val neutral">—5.4%</div>
+      <div class="kpi-sub">EUR: −4.0%</div>
     </div>
   </div>
 
-  <!-- ─── RESUMEN CUENTA ─────────────────────────────────── -->
-  <div class="card" style="margin-bottom:24px;">
-    <div class="card-title">Resumen de Cuenta · 1 ene 2022 – 19 mar 2026</div>
-    <div class="summary-grid" id="account-summary"></div>
+  <!-- PERIOD BUTTONS -->
+  <div class="period-row">
+    <button class="period-btn active" onclick="setPeriod('ytd',this)">Año en curso</button>
+    <button class="period-btn" onclick="setPeriod('1y',this)">Año anterior</button>
+    <button class="period-btn" onclick="setPeriod('2y',this)">2 años</button>
+    <button class="period-btn" onclick="setPeriod('3y',this)">3 años</button>
+    <button class="period-btn" onclick="setPeriod('all',this)">Desde inicio</button>
   </div>
 
-  <!-- ─── TABLA DE POSICIONES ────────────────────────────── -->
-  <div class="table-card">
-    <div class="table-header">
-      <span class="table-title">Posiciones Actuales</span>
-      <span class="table-hint">Haz clic en una fila para ver el detalle</span>
+  <!-- CHARTS ROW -->
+  <div class="charts-row">
+    <div class="chart-card wide">
+      <div class="chart-title">COMPARATIVA — RENDIMIENTO SEMESTRAL</div>
+      <div class="chart-wrap" style="height:220px"><canvas id="hist-chart"></canvas></div>
     </div>
-    <div class="table-wrapper">
-      <table>
+  </div>
+
+  <!-- GP TABLE -->
+  <div class="section-card">
+    <div class="section-title">RENDIMIENTO POR PERÍODO</div>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Período</th>
+          <th class="right">Timi</th>
+          <th class="right">Nasdaq</th>
+          <th class="right">Alpha</th>
+        </tr>
+      </thead>
+      <tbody id="perf-tbody"></tbody>
+    </table>
+  </div>
+
+  <!-- ACCOUNT SUMMARY -->
+  <div class="summary-strip" id="summary-strip"></div>
+
+</div>
+
+<!-- ══════════════════════════════════════════
+     TAB: CARTERA
+══════════════════════════════════════════ -->
+<div id="tab-cartera" class="tab-content">
+
+  <!-- KPI ROW CARTERA -->
+  <div class="kpi-row">
+    <div class="kpi-block main-kpi">
+      <div class="kpi-label">VALOR TOTAL</div>
+      <div class="kpi-val" id="c-total">—</div>
+    </div>
+    <div class="kpi-block">
+      <div class="kpi-label">P&amp;L TOTAL</div>
+      <div class="kpi-val" id="c-pnl">—</div>
+    </div>
+    <div class="kpi-block">
+      <div class="kpi-label">LIQUIDEZ</div>
+      <div class="kpi-val" id="c-cash">—</div>
+      <div class="kpi-sub" id="c-cash-pct"></div>
+    </div>
+  </div>
+
+  <!-- DONUT + GEO -->
+  <div class="two-col">
+    <div class="chart-card">
+      <div class="chart-title">COMPOSICIÓN TIMI</div>
+      <div class="chart-wrap" style="height:280px"><canvas id="donut-chart"></canvas></div>
+      <div class="donut-hint">Haz clic en un segmento para ver detalle</div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">DISTRIBUCIÓN GEOGRÁFICA</div>
+      <div class="chart-wrap" style="height:200px"><canvas id="geo-chart"></canvas></div>
+      <div class="geo-legend" id="geo-legend"></div>
+    </div>
+  </div>
+
+  <!-- POSITIONS TABLE -->
+  <div class="section-card">
+    <div class="section-title">POSICIONES — TIMI</div>
+    <div class="table-scroll">
+      <table class="data-table positions-table">
         <thead>
           <tr>
-            <th>Valor</th>
-            <th class="right">Acciones</th>
-            <th class="right">Precio Medio</th>
-            <th class="right">Precio Actual</th>
-            <th class="right">Valor Mercado</th>
-            <th class="right">P&amp;L €</th>
+            <th>EMPRESA</th>
+            <th>GEOGRAFÍA</th>
+            <th>MONEDA</th>
+            <th class="right">PRECIO</th>
             <th class="right">P&amp;L %</th>
-            <th class="right">CAGR</th>
-            <th class="right">Peso</th>
-            <th class="right">Holding</th>
+            <th class="right">PESO</th>
+            <th class="right">P&amp;L €</th>
           </tr>
         </thead>
-        <tbody id="positions-tbody"></tbody>
+        <tbody id="pos-tbody"></tbody>
       </table>
     </div>
   </div>
 
-  <!-- ─── DISTRIBUCIÓN + P&L ─────────────────────────────── -->
-  <div class="section-row" style="margin-top:24px;">
-    <div class="card">
-      <div class="card-title">Distribución del Portfolio</div>
-      <div class="chart-container">
-        <canvas id="weight-chart"></canvas>
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-title">P&amp;L Posiciones Actuales (%)</div>
-      <div class="chart-container">
-        <canvas id="pnl-chart"></canvas>
-      </div>
-    </div>
-  </div>
-
-  <!-- ─── RENDIMIENTO HISTÓRICO ──────────────────────────── -->
-  <div class="card" style="margin-top:24px; margin-bottom:24px;">
-    <div class="card-title">Rendimiento Semestral vs US Tech 100 (Nasdaq)</div>
-    <div class="chart-container" style="height:280px;">
-      <canvas id="historical-chart"></canvas>
-    </div>
-  </div>
-
-  <!-- ─── ALL TIME G/P ───────────────────────────────────── -->
-  <div class="card" style="margin-bottom:24px;">
-    <div class="card-title">G/P Histórica por Instrumento · Top 10 Ganadores y Perdedores</div>
-    <div class="chart-container" style="height:520px;">
-      <canvas id="alltime-chart"></canvas>
-    </div>
-  </div>
-
-  <!-- ─── RIESGO ─────────────────────────────────────────── -->
-  <div class="card" style="margin-bottom:24px;">
-    <div class="card-title">Análisis de Riesgo y Métricas</div>
-    <div class="risk-grid" id="risk-section"></div>
-  </div>
-
 </div>
 
-<!-- ─── MODAL ────────────────────────────────────────────── -->
-<div id="modal">
-  <div id="modal-content"></div>
+<!-- DETAIL MODAL -->
+<div id="modal" onclick="if(event.target===this)closeModal()">
+  <div class="modal-box" id="modal-box"></div>
 </div>
 
 <script src="data.js"></script>
