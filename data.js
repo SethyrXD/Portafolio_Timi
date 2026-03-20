@@ -1,21 +1,8 @@
-// ============================================================
-//  PORTFOLIO DATA — Sergio Pérez | Clicktrade / iBroker
-//  Trades extraídos del Excel de transacciones (ene 2022 – mar 2026)
-//  Precios actuales: cierre 19-mar-2026 según informe iBroker
-//  Divisa base: EUR
-// ============================================================
-
 const PORTFOLIO_DATA = {
 
   portfolioName: "Sergio · Portfolio",
   currency: "EUR",
   benchmark: "US Tech 100 (NAS)",
-
-  // ─── POSICIONES ACTUALES ───────────────────────────────────
-  // "trades" = TODAS las compras históricas de la posición actual
-  // Para posiciones con ventas parciales, el cálculo de precio
-  // medio usa FIFO (las primeras compras cubren las ventas)
-  // y el app.js excluye los lotes ya vendidos automáticamente.
 
   positions: [
     {
@@ -26,7 +13,7 @@ const PORTFOLIO_DATA = {
       currentPrice: 94.09,
       lastUpdated: "2026-03-19",
       sector: "Space / Telecom",
-      notes: "7 tramos de compra. Sin ventas. +227% histórico.",
+      notes: "7 tramos de compra. Sin ventas. +227% historico.",
       trades: [
         { date: "2025-03-21", shares: 400,  price: 25.69  },
         { date: "2025-05-12", shares: 200,  price: 26.46  },
@@ -36,7 +23,6 @@ const PORTFOLIO_DATA = {
         { date: "2026-03-03", shares: 100,  price: 89.37  },
         { date: "2026-03-18", shares: 200,  price: 90.79  },
       ],
-      // Sin ventas => acciones actuales = 1500
     },
     {
       ticker: "HIMS",
@@ -46,14 +32,10 @@ const PORTFOLIO_DATA = {
       currentPrice: 24.16,
       lastUpdated: "2026-03-19",
       sector: "Health / DTC",
-      notes: "5 compras, 2 ventas parciales (440+200 acc). Quedan 1000 acc.",
+      notes: "5 compras, 2 ventas parciales. Quedan 1000 acc.",
       trades: [
-        // Compras restantes tras ventas FIFO (440+200=640 acc vendidas de los primeros lotes)
-        // Lote 1: 550 → 440 vendidas en feb-25 → quedan 110
-        // Lote 2: 250 → 200 vendidas en ago-25 → quedan 50
-        // Lotes 3,4,5 completos
-        { date: "2024-10-10", shares: 110,  price: 17.97  }, // restante tras venta feb-25
-        { date: "2024-10-18", shares: 50,   price: 22.16  }, // restante tras venta ago-25
+        { date: "2024-10-10", shares: 110,  price: 17.97  },
+        { date: "2024-10-18", shares: 50,   price: 22.16  },
         { date: "2024-10-22", shares: 410,  price: 23.52  },
         { date: "2024-10-30", shares: 230,  price: 18.96  },
         { date: "2025-11-13", shares: 200,  price: 36.75  },
@@ -67,14 +49,9 @@ const PORTFOLIO_DATA = {
       currentPrice: 113.72,
       lastUpdated: "2026-03-19",
       sector: "Medtech",
-      notes: "6 compras, 1 venta parcial (300 acc ago-25 @ 114.92). Quedan 400 acc.",
+      notes: "6 compras, 1 venta parcial. Quedan 400 acc.",
       trades: [
-        // 300 vendidas en ago-25 FIFO desde los primeros lotes:
-        // Lote 1: 90  → 90 vendidas → 0 restantes
-        // Lote 2: 65  → 65 vendidas → 0 restantes
-        // Lote 3: 95  → 95 vendidas → 0 restantes
-        // Lote 4: 175 → 50 vendidas → 125 restantes
-        { date: "2024-12-31", shares: 125,  price: 61.70  }, // restante tras venta
+        { date: "2024-12-31", shares: 125,  price: 61.70  },
         { date: "2025-02-21", shares: 135,  price: 72.90  },
         { date: "2025-03-05", shares: 140,  price: 68.94  },
       ],
@@ -101,9 +78,8 @@ const PORTFOLIO_DATA = {
       currentPrice: 71.93,
       lastUpdated: "2026-03-19",
       sector: "Space / Launch",
-      notes: "Compra 700 @ 42.14, venta parcial 200 @ 74.80 (dic-25). Quedan 500 acc.",
+      notes: "Compra 700, venta parcial 200. Quedan 500 acc.",
       trades: [
-        // 700 compradas, 200 vendidas → 500 restantes (todo del mismo lote)
         { date: "2025-12-02", shares: 500,  price: 42.14  },
       ],
     },
@@ -128,7 +104,7 @@ const PORTFOLIO_DATA = {
       currentPrice: 49.52,
       lastUpdated: "2026-03-19",
       sector: "IT Services",
-      notes: "14 tramos de compra entre may-22 y jul-24. Sin ventas. Mayor pérdida latente.",
+      notes: "14 tramos entre may-22 y jul-24. Mayor perdida latente.",
       trades: [
         { date: "2022-05-02", shares: 25,   price: 127.60 },
         { date: "2022-07-15", shares: 10,   price: 95.50  },
@@ -167,37 +143,24 @@ const PORTFOLIO_DATA = {
       name: "Afentra PLC",
       currency: "GBP",
       fxRate: 1.15319,
-      currentPrice: 73.40,   // en peniques (GBX)
+      currentPrice: 73.40,
       lastUpdated: "2026-03-19",
       sector: "Energy / Oil",
-      notes: "1 sola compra (19-mar-26). Posición muy reciente.",
+      notes: "1 sola compra (19-mar-26). Posicion muy reciente.",
       trades: [
         { date: "2026-03-19", shares: 20000, price: 75.00 },
       ],
     },
-    { date: "2022-05-11", shares: 40,   price: 46.79  },
-        { date: "2022-06-13", shares: 10,   price: 45.10  },
-        { date: "2022-10-18", shares: 20,   price: 40.26  },
-        { date: "2022-11-25", shares: 15,   price: 46.55  },
-      ],
-    },
-  { date: "2022-05-24", shares: 5,    price: 177.94 },
-        { date: "2022-06-06", shares: 5,    price: 193.17 },
-      ],
-    },
   ],
 
-  // ─── LIQUIDEZ ──────────────────────────────────────────────
   cash: {
-    amount: 15760.31,   // EUR exacto a 19-mar-2026
+    amount: 15760.31,
     currency: "EUR"
   },
 
-  // ─── BENCHMARK ─────────────────────────────────────────────
   benchmarkReturn: 75.0,
   portfolioTotalReturn: 23.56,
 
-  // ─── HISTÓRICO SEMESTRAL (informe iBroker, pág. 4) ────────
   historicalReturns: [
     { period: "H1-2022", portfolio: -20.1, benchmark: -17.6 },
     { period: "H2-2022", portfolio:  -7.7, benchmark:  -4.6 },
@@ -210,7 +173,6 @@ const PORTFOLIO_DATA = {
     { period: "H1-2026", portfolio:  -2.3, benchmark:  -3.3 },
   ],
 
-  // ─── RESUMEN CUENTA ────────────────────────────────────────
   accountSummary: {
     startValue:      0,
     depositsNet:     260008.07,
@@ -220,7 +182,6 @@ const PORTFOLIO_DATA = {
     twrReturn:           23.56,
   },
 
-  // ─── G/P HISTÓRICA COMPLETA (todas las posiciones, pág 5-9)─
   allTimeGP: [
     { name: "AST SpaceMobile",          gp:  62368.60, pct:  227.40 },
     { name: "Hims & Hers Health",        gp:  23624.65, pct:   25.73 },
